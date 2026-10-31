@@ -1,5 +1,3 @@
-# AND-OR graph example
-
 graph = {
     'A': [['B', 'C'], ['D']],
     'B': [['E']],
@@ -11,24 +9,21 @@ graph = {
 }
 
 cost = {
-    'B': 2, 'C': 2, 'D': 5,
-    'E': 1, 'F': 1, 'G': 1
+    'E': 1,
+    'F': 1,
+    'G': 5
 }
 
 def ao_star(node):
     if not graph[node]:
-        return cost.get(node, 0)
+        return cost[node]
 
-    best_cost = float('inf')
+    best = float('inf')
 
     for option in graph[node]:
-        total = 0
+        total = sum(ao_star(child) for child in option)
+        best = min(best, total)
 
-        for child in option:
-            total += cost.get(child, 0) + ao_star(child)
-
-        best_cost = min(best_cost, total)
-
-    return best_cost
+    return best
 
 print("Minimum cost:", ao_star('A'))
